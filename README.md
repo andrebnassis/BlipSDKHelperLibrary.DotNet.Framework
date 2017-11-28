@@ -93,7 +93,7 @@ Result:
 
 ### Requirements:  
 Url: Obligatory  
-PreviewUrl: Optional
+PreviewUrl: Optional  
 Title: Optional  
 Subtitle: Optional
 
@@ -233,7 +233,7 @@ Result:
 ![alt text](https://image.ibb.co/bxOsWR/Carousel_Smaller6.gif)
 
 
-## 9.0 Prepare to Send List With Url Button
+## 9.0 Prepare to Send List With WebUrl on Item
 
 ### Requirements:
 
@@ -325,7 +325,7 @@ Code:
     await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
 
-Result: 
+Result:   
 Under construction
 
 
@@ -344,5 +344,5 @@ Code:
     await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
 
-Result: 
+Result:   
 Under construction
