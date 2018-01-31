@@ -40,7 +40,7 @@ Text: Obligatory
 ### Example:  
 
 Code:  
-```C#
+ ```C#
 	var document = _documentService.CreateTextDocument("Sending a simple text");
 	
 	await _sender.SendMessageAsync(document, message.From, cancellationToken);
