@@ -41,13 +41,14 @@ Text: Obligatory
 
 Code:  
 ```C#
-	 //FACEBOOK
-     var document = _documentService.CreateTextDocument("... Inspiração, e um pouco de café! E isso me basta!");
+    var document = _documentService.CreateTextDocument("Sending a simple text");
+	 	
+	await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
 
 Result:  
 
-![alt text](https://image.ibb.co/io6qJ6/Text.png)
+![alt text](https://image.ibb.co/hjUJzR/01_Plain_Text.png)
 
 ## 2. Sending Image
 
@@ -61,7 +62,7 @@ Subtitle: Optional
 
 Code:  
  ```C#
-	var document = _documentService.CreateImageDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalText");
+	var document = _documentService.CreateImageDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalSubtitle");
 	
 	await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
@@ -80,13 +81,13 @@ Subtitle: Optional
 
 Code:  
  ```C#
-	var document = _documentService.CreateVideoDocument("https://dl.dropboxusercontent.com/s/jxy3sspxbl6ilan/John%20Lennon%20-%20Imagine.mp4", "OptionalTitle", "OptionalText");
+	var document = _documentService.CreateVideoDocument("https://dl.dropboxusercontent.com/s/jxy3sspxbl6ilan/John%20Lennon%20-%20Imagine.mp4", "OptionalTitle", "OptionalSubtitle");
 	
 	await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
 
 Result:  
-![alt text](https://image.ibb.co/bvNxy6/Video.png)
+![alt text](https://image.ibb.co/hrn7R6/02_Video.png)
 
 
 ## 4. Sending Web Link
@@ -101,7 +102,7 @@ Subtitle: Optional
 
 Code:  
  ```C#
-	var document = _documentService.CreateWebLinkDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg");
+	var document = _documentService.CreateWebLinkDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalSubtitle");
 	
 	await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
@@ -121,10 +122,10 @@ PS: Buttons are grouped by 3 when sent.
 
 Code:  
  ```C#
-	var menu = new MenuModel("ObligatoryText");
-    menu.AddTextButton("Text2", "Value2", 2);
-    menu.AddTextButton("Text1", "Value1", 1);
-    menu.AddTextButton("Text0", "Value0");
+	var menu = new MenuModel("Choose an option:");
+    menu.AddTextButton("Button2", "Value2", 2);
+    menu.AddTextButton("Button1", "Value1", 1);
+    menu.AddTextButton("Button0", "Value0");
     
     var document = _documentService.CreateMenuDocument(menu);
 	
@@ -146,11 +147,18 @@ Text: Obligatory
 
 Code:  
  ```C#
-	var quickreply = new QuickReplyModel("ObligatoryText");
-    quickreply.AddLocationButton(2);
-    quickreply.AddTextButton("Text1", "Value1", "https://www.iconexperience.com/_img/v_collection_png/256x256/shadow/bullet_ball_red.png", 1);
-    quickreply.AddTextButton("😀 Text3", "Value3", null, 2);
-    quickreply.AddTextButton("Text0", "Value0");
+	var quickreply = new QuickReplyModel("Choose an option:");
+    quickreply.AddLocationButton(10);
+    quickreply.AddTextButton("Button1", "Value1", "https://www.iconexperience.com/_img/v_collection_png/256x256/shadow/bullet_ball_red.png", 1);
+    quickreply.AddTextButton("😀 Button2", "Value2", null, 2);
+    quickreply.AddTextButton("Button0", "Value0");
+	quickreply.AddTextButton("Button3", "Value3", null, 3);
+	quickreply.AddTextButton("Button4", "Value4", null, 4);
+	quickreply.AddTextButton("Button5", "Value5", null, 5);
+	quickreply.AddTextButton("Button6", "Value6", null, 6);
+	quickreply.AddTextButton("Button7", "Value7", null, 7);
+	quickreply.AddTextButton("Button8", "Value8", null, 8);
+	quickreply.AddTextButton("Button9", "Value9", null, 9);
 
     var document = _documentService.CreateQuickReplyDocument(quickreply);
 	
@@ -158,7 +166,7 @@ Code:
 ```
 
 Result:  
-![alt text](https://image.ibb.co/ksbwrR/Quick_Reply.gif)
+![alt text](https://image.ibb.co/bXvBm6/03_Quick_Reply.gif)
 
 
 ## 7. Sending Multiple Documents at the same time
@@ -171,17 +179,17 @@ It follows the dependency of each document that will be sent.
 
 Code:  
  ```C#
-	var document0 = _documentService.CreateTextDocument("... Inspiração, e um pouco de café! E isso me basta!");
-    var document1 = _documentService.CreateImageDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalText");
-    var document2 = _documentService.CreateVideoDocument("https://dl.dropboxusercontent.com/s/jxy3sspxbl6ilan/John%20Lennon%20-%20Imagine.mp4", "OptionalTitle", "OptionalText");
-    
+	var document0 = _documentService.CreateTextDocument("Sending a simple text");
+    var document1 = _documentService.CreateImageDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalSubtitle");
+    var document2 = _documentService.CreateVideoDocument("https://dl.dropboxusercontent.com/s/jxy3sspxbl6ilan/John%20Lennon%20-%20Imagine.mp4", "OptionalTitle", "OptionalSubtitle");
+
     var document = _documentService.CreateCollectionOfDocuments(document1, document2, document0);
     await _sender.SendMessageAsync(document, message.From, cancellationToken);
 
     ////OR if you want to order the values explicity.
-    var document0 = _documentService.CreateTextDocument("... Inspiração, e um pouco de café! E isso me basta!");
-    var document1 = _documentService.CreateImageDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalText");
-    var document2 = _documentService.CreateVideoDocument("https://dl.dropboxusercontent.com/s/jxy3sspxbl6ilan/John%20Lennon%20-%20Imagine.mp4", "OptionalTitle", "OptionalText");
+    var document0 = _documentService.CreateTextDocument("Sending a simple text");
+    var document1 = _documentService.CreateImageDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalSubtitle");
+    var document2 = _documentService.CreateVideoDocument("https://dl.dropboxusercontent.com/s/jxy3sspxbl6ilan/John%20Lennon%20-%20Imagine.mp4", "OptionalTitle", "OptionalSubtitle");
 
     var collection = new GroupDocumentsModel();
     collection.Add(document0, 2);
@@ -192,7 +200,7 @@ Code:
 ```
 
 Result:  
-![alt text](https://image.ibb.co/gjs85m/Multiple_Docs.png)
+![alt text](https://image.ibb.co/bFpqDm/04_Multiple_Documents.png)
 
 
 ## 8. Sending Carousel
@@ -230,7 +238,7 @@ Code:
 ```
 
 Result:  
-![alt text](https://image.ibb.co/bxOsWR/Carousel_Smaller6.gif)
+![alt text](https://image.ibb.co/gDiNR6/05_Carousel.gif)
 
 
 ## 9.0 Prepare to Send List With WebUrl on Item
@@ -264,33 +272,35 @@ PS: If you use function GetItem.AddWebUrl, see Item 9.0
 
 Code:  
  ```C#
-	var list = new ListModel();
+    var list = new ListModel();
     list.HighlightFirstItem();
     list.AddBottomTextButton("BottomButton Text", "BottomButtonValue");
-    list.AddItem("Text", "Subtitle", "https://www.jqueryscript.net/images/Simplest-Responsive-jQuery-Image-Lightbox-Plugin-simple-lightbox.jpg", 1);
-    list.AddItem("Text", "Subtitle", null, 5);
-    list.AddItem("Text", "Subtitle", "https://www.jqueryscript.net/images/Simplest-Responsive-jQuery-Image-Lightbox-Plugin-simple-lightbox.jpg");
-    list.GetItem(2).AddTextButton("ButtonText", "ButtonValue");
-    list.AddItem("Text", "Subtitle", "", 3);
-    list.GetItem(3).AddTextButton("ButtonText", "ButtonValue");
+    list.AddItem("Title1", "Subtitle1", "https://www.jqueryscript.net/images/Simplest-Responsive-jQuery-Image-Lightbox-Plugin-simple-lightbox.jpg", 1);
+    list.AddItem("Title3", "Subtitle3", null, 3);
+    list.AddItem("Title0", "Subtitle0", "https://www.jqueryscript.net/images/Simplest-Responsive-jQuery-Image-Lightbox-Plugin-simple-lightbox.jpg");
+    list.GetItem(2).AddTextButton("ButtonText0", "ButtonValue0");
+    list.AddItem("Title2", "Subtitle2", "", 2);
+    list.GetItem(3).AddTextButton("ButtonText2", "ButtonValue2");
     list.GetItem(3).AddWebUrl("https://www.youtube.com/");
 
-    //IMPORTANT:
-    //If it is first time that you are using GetItem.AddWebUrl method , dont forget to call RegisterDomainToWhitelist function (Item 9.0), passing the Urls as parameters.
+    //IMPORTANT(only for List Creation case): 
+    //If it is first time that you are using GetItem.AddWebUrl method, dont forget to call RegisterDomainToWhitelist function, passing the Urls as parameters.
 
     var document = _documentService.CreateListDocument(list);
     await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
 
 Result:  
-![alt text](https://image.ibb.co/k5fHy6/List.png)
+![alt text](https://image.ibb.co/hGLYzR/06_List.png)
 
 
 ## 10. Sending Receipt
 
 ### Requirements: 
 
-Under construction
+Currency: Obligatory  
+Payment Method: Obligatory  
+Ship Info: Obligatory
 
 ### Example:
 
@@ -298,13 +308,13 @@ Code:
 ```C#
     var receipt = new ReceiptModel("BRL");
 
-    receipt.AddItem("Classic White T-Shirt", "Single Item Price: 25", 25, 2, "http://www.jqueryscript.net/images/Simplest-Responsive-jQuery-Image-Lightbox-Plugin-simple-lightbox.jpg", 2);
+    receipt.AddItem("Classic White T-Shirt0", "Single Item Price: 25", 25, 2, "http://www.jqueryscript.net/images/Simplest-Responsive-jQuery-Image-Lightbox-Plugin-simple-lightbox.jpg");
     receipt.GetItem(0).ChangeCurrency("USD"); //Optional
     receipt.GetItem(0).RemoveFromSubtotalCalculus(); //Optional
-    receipt.AddItem("Classic White T-Shirt 2 ", "Single Item Price: 1", 1, 10);
-    receipt.AddItem("Classic White T-Shirt1", "Single Item Price: 25", 25, 2, "https://img.michaels.com/L6/3/IOGLO/873480063/212543238/10093626_r.jpg", 3);
+    receipt.AddItem("Classic White T-Shirt 2 ", "Single Item Price: 1", 1, 10, null);
+    receipt.AddItem("Classic White T-Shirt1", "Single Item Price: 25", 25, 2, "https://img.michaels.com/L6/3/IOGLO/873480063/212543238/10093626_r.jpg");
 
-    receipt.SetOrderedDate(DateTime.UtcNow); //Optional: Default is DateTime.Now
+    receipt.SetOrderedDate(DateTime.Now); //Optional: Default is DateTime.Now
     receipt.SetPaymentMethod("Obligatory"); //Obligatory
     receipt.SetShipInfo("Stephane Crozatier", "1 Hacker Way", "Menlo Park", 94025, "CA", "US", "Optional second address street"); //Obligatory
 
@@ -321,28 +331,28 @@ Code:
     receipt.AddAdditionalNotes("Some other stuff", 180); //Optional
 
     var document = _documentService.CreateReceiptDocument(receipt);
-
-    await _sender.SendMessageAsync(document, message.From, cancellationToken);
+	
+	await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
 
 Result:   
-Under construction
+![alt text](https://image.ibb.co/ivBdYm/07_Receipt.gif)
 
 
 ## 11. Sending CallButton
 
 ### Requirements: 
 
-Under construction
+It is not working properly yet. Needs to investigate.
 
 ### Example:
 
 Code:
 ```C#
-	var document = _documentService.CreateCallButtonDocument("Initial Text", "Call", "+5531999999999");
+    var document = _documentService.CreateCallButtonDocument("Initial Text", "Call", "+5531999999999");
 
     await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
 
 Result:   
-Under construction
+![alt text](https://image.ibb.co/m7ovw6/08_Call_Button.png)
