@@ -41,8 +41,8 @@ Text: Obligatory
 
 Code:  
 ```C#
-    var document = _documentService.CreateTextDocument("Sending a simple text");
-	 	
+	var document = _documentService.CreateTextDocument("Sending a simple text");
+	
 	await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
 
@@ -133,7 +133,7 @@ Code:
 ```
 
 Result:  
-![alt text](https://image.ibb.co/eWLHy6/Menu.png)`
+![alt text](https://image.ibb.co/ns2G3m/09_Menu.png)`
 
 
 ## 6. Sending QuickReply
