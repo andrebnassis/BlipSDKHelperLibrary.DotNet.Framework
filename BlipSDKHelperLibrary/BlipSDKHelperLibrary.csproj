@@ -97,6 +97,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IQuickreplySendLocationCreation.cs" />
+    <Compile Include="SdkHelpers\BlipChatBlipSDKHelper.cs" />
     <Compile Include="SdkHelpers\BlipSDKHelperCore.cs" />
     <Compile Include="FacebookNativeModel\FacebookNativeButtonType.cs" />
     <Compile Include="FacebookNativeModel\FacebookNativeContentType.cs" />
@@ -128,6 +130,7 @@
     <Compile Include="Models\ReceiptModel.cs" />
     <Compile Include="Models\WebviewSize.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SdkHelpers\IBlipChatBlipSDKHelper.cs" />
     <Compile Include="SdkHelpers\IFacebookBlipSDKHelper.cs" />
   </ItemGroup>
   <ItemGroup>

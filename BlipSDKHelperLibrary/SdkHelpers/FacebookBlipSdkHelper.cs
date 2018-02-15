@@ -16,12 +16,12 @@ namespace BlipSDKHelperLibrary
 {
     public class FacebookBlipSDKHelper : IFacebookBlipSDKHelper
     {
-       
+
         public FacebookBlipSDKHelper()
         {
 
         }
-        
+
         public JsonDocument CreateCallButtonDocument(string title, string buttonText, string phoneNumber)
         {
             return BlipSDKHelperCore.MESSENGER_CreateCallButtonDocument(title, buttonText, phoneNumber);
@@ -29,7 +29,7 @@ namespace BlipSDKHelperLibrary
 
         public DocumentCollection CreateCarouselDocument(CarouselModel carouselModel)
         {
-            return BlipSDKHelperCore.GENERIC_CreateCarouselDocument(carouselModel);
+            return BlipSDKHelperCore.MESSENGER_CreateCarouselDocument(carouselModel);
         }
 
         public DocumentCollection CreateCollectionOfDocuments(GroupDocumentsModel content)

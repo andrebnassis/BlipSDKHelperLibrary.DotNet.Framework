@@ -56,6 +56,7 @@ namespace BlipSDKHelperLibrary
                 (tmp.Header.Value as MediaLink).Type = MediaType.Parse("image/*");
 
                 var buttons = cards[i].Buttons.OrderBy(c => c.Order).ToList();
+                buttons.RemoveAll(c => c.Type.Equals(ButtonType.Share));
 
                 DocumentSelectOption[] tmp_buttons = new DocumentSelectOption[buttons.Count()];
                 if (buttons.Any())
@@ -79,16 +80,6 @@ namespace BlipSDKHelperLibrary
                             button.Order = j;
                             button.Label = new DocumentContainer();
                             button.Label.Value = GENERIC_CreateWebLinkDocument(buttons[j].Value, null, buttons[j].Text);
-                            button.Value = new DocumentContainer();
-                            button.Value.Value = GENERIC_CreateTextDocument(buttons[j].Value);
-                            tmp_buttons[j] = button;
-                        }
-                        else if (buttons[j].Type == Models.ButtonType.Share)
-                        {
-                            DocumentSelectOption button = new DocumentSelectOption();
-                            button.Order = button.Order;
-                            button.Label = new DocumentContainer();
-                            button.Label.Value = new WebLink() { Uri = new Uri("share:") };
                             tmp_buttons[j] = button;
                         }
 
@@ -134,7 +125,12 @@ namespace BlipSDKHelperLibrary
 
         public static WebLink GENERIC_CreateWebLinkDocument(string url, string previewUrl = null, string title = null, string subtitle = null)
         {
-            var uri = new Uri(Uri.EscapeUriString(url));
+            Uri uri = null;
+            if (!string.IsNullOrEmpty(url))
+            {
+                uri = new Uri(Uri.EscapeUriString(url));
+            }
+
             var previewUri = previewUrl.IsNullOrWhiteSpace() ? null : new Uri(Uri.EscapeUriString(previewUrl));
 
             var document = new WebLink();
@@ -225,6 +221,21 @@ namespace BlipSDKHelperLibrary
         }
 
 
+        public static DocumentCollection GENERIC_CreateQuickReplySendLocationDocument(QuickReplyModel quickReplyModel)
+        {
+            var options = new List<SelectOption>();
+            var buttons = quickReplyModel.Options.OrderBy(c => c.Order).ToList();
+
+
+            var documentList = new GroupDocumentsModel();
+
+            var sendLocationButton = buttons.Select(c => c.Type.Equals(ButtonType.Location)).FirstOrDefault();
+
+            documentList.Add(CreateSendLocationDocument(quickReplyModel.Text));
+
+            return GENERIC_CreateCollectionOfDocuments(documentList);
+        }
+
         public static DocumentCollection GENERIC_CreateQuickReplyDocument(QuickReplyModel quickReplyModel)
         {
 
@@ -232,17 +243,17 @@ namespace BlipSDKHelperLibrary
             var buttons = quickReplyModel.Options.OrderBy(c => c.Order).ToList();
 
             var documentList = new GroupDocumentsModel();
-            
+
             for (int i = 0; i < buttons.Count(); i++)
             {
                 if (ButtonType.Text.Equals(buttons[i].Type))
                 {
                     options.Add(CreateQuickReplyTextButton(buttons[i].Text, buttons[i].Value, i));
                 }
-                else if (ButtonType.Location.Equals(buttons[i].Type))
-                {
-                    documentList.Add(CreateSendLocationDocument(quickReplyModel.Text));
-                }
+                //else if (ButtonType.Location.Equals(buttons[i].Type))
+                //{
+                //    documentList.Add(CreateSendLocationDocument(quickReplyModel.Text));
+                //}
             }
 
             if (options.Any())
@@ -278,7 +289,7 @@ namespace BlipSDKHelperLibrary
 
             return button;
         }
-        
+
         private static Document CreateSendLocationDocument(string text)
         {
             var document = new Input();
@@ -290,42 +301,87 @@ namespace BlipSDKHelperLibrary
 
             return document;
         }
-        
 
-        public static DocumentList GENERIC_CreateListDocument(ListModel itemsList)
-        {
-
-            var content = new List<Document>();
-            var items = itemsList.Items.OrderBy(c => c.Order).ToList();
-
-            for (int i = 0; i < items.Count(); i++)
-            {
-                if (items[i].Url.IsNullOrEmpty())
-                {
-                    items[i].Url = items[i].ImageUrl;
-                }
-                content.Add(GENERIC_CreateWebLinkDocument(items[i].Url, items[i].ImageUrl, items[i].Title, items[i].Subtitle));
-            }
-
-            var document = new DocumentList();
-
-            document.Header = new DocumentContainer();
-            document.Header.Value = content[0];
-
-            document.Items = new DocumentContainer[content.Count - 1];
-            for (int i = 0; i < content.Count - 1; i++)
-            {
-                document.Items[i] = new DocumentContainer();
-                document.Items[i].Value = content[i + 1];
-            }
-
-            return document;
-
-        }
-        #endregion 
+        #endregion
 
         //Messenger Special Implementations: Receipt, CallButton, List, QuickReply;
         #region Messenger
+        public static DocumentCollection MESSENGER_CreateCarouselDocument(CarouselModel carouselModel)
+        {
+
+            var carousel = new DocumentCollection();
+            //contents.
+            carousel.Items = new DocumentSelect[carouselModel.Cards.Count];
+            carousel.ItemType = DocumentSelect.MediaType;
+
+            var cards = carouselModel.Cards.OrderBy(c => c.Order).ToList();
+
+            //Para cada content existente.
+            for (int i = 0; i < cards.Count; i++)
+            {
+
+                var tmp = new DocumentSelect();
+                tmp.Header = new DocumentContainer();
+                tmp.Header.Value = new MediaLink();
+                (tmp.Header.Value as MediaLink).Title = cards[i].Title;
+                (tmp.Header.Value as MediaLink).Text = cards[i].Subtitle;
+
+                try
+                {
+                    (tmp.Header.Value as MediaLink).PreviewUri = new Uri(cards[i].UrlImage);
+                    (tmp.Header.Value as MediaLink).Uri = new Uri(cards[i].UrlImage);
+                }
+                catch { }
+
+                (tmp.Header.Value as MediaLink).Type = MediaType.Parse("image/*");
+
+                var buttons = cards[i].Buttons.OrderBy(c => c.Order).ToList();
+
+                DocumentSelectOption[] tmp_buttons = new DocumentSelectOption[buttons.Count()];
+                if (buttons.Any())
+                {
+                    for (int j = 0; j < buttons.Count(); j++)
+                    {
+
+                        if (buttons[j].Type == Models.ButtonType.Text)
+                        {
+                            DocumentSelectOption button = new DocumentSelectOption();
+                            button.Order = j;
+                            button.Label = new DocumentContainer();
+                            button.Label.Value = GENERIC_CreateTextDocument(buttons[j].Text);
+                            button.Value = new DocumentContainer();
+                            button.Value.Value = GENERIC_CreateTextDocument(buttons[j].Value);
+                            tmp_buttons[j] = button;
+                        }
+                        else if (buttons[j].Type == Models.ButtonType.Link)
+                        {
+                            DocumentSelectOption button = new DocumentSelectOption();
+                            button.Order = j;
+                            button.Label = new DocumentContainer();
+                            button.Label.Value = GENERIC_CreateWebLinkDocument(buttons[j].Value, null, buttons[j].Text);
+                            button.Value = new DocumentContainer();
+                            button.Value.Value = GENERIC_CreateTextDocument(buttons[j].Value);
+                            tmp_buttons[j] = button;
+                        }
+                        else if (buttons[j].Type == Models.ButtonType.Share)
+                        {
+                            DocumentSelectOption button = new DocumentSelectOption();
+                            button.Order = button.Order;
+                            button.Label = new DocumentContainer();
+                            button.Label.Value = new WebLink() { Uri = new Uri("share:") };
+                            tmp_buttons[j] = button;
+                        }
+
+                    }
+
+                }
+                tmp.Options = tmp_buttons;
+
+                carousel.Items[i] = tmp;
+            }
+            return carousel;
+        }
+
         public static JsonDocument MESSENGER_CreateQuickReplyDocument(QuickReplyModel quickReplyModel)
         {
 
@@ -413,7 +469,7 @@ namespace BlipSDKHelperLibrary
 
         public static JsonDocument MESSENGER_CreateReceiptDocument(ReceiptModel receipt)
         {
-            var items = receipt.ItemList.OrderBy(c => c.Order).ToList();
+            var items = receipt.ItemList.OrderByDescending(c => c.Order).ToList();
 
             var facebookReceipt = new FacebookNativeReceipt();
             facebookReceipt.payload.currency = receipt.Currency;
