@@ -24,12 +24,12 @@ Code:
 ```C#
         private readonly IMessagingHubSender _sender;
         private readonly IFacebookBlipSDKHelper _facebookDocumentService;
-		private readonly IBlipChatBlipSDKHelper _blipchatDocumentService;
+        private readonly IBlipChatBlipSDKHelper _blipchatDocumentService;
         public PlainTextMessageReceiver(IMessagingHubSender sender)
         {
             _sender = sender;
             _facebookDocumentService = new FacebookBlipSDKHelper();
-			_blipchatDocumentService = new BlipChatBlipSDKHelper();
+            _blipchatDocumentService = new BlipChatBlipSDKHelper();
         }
 ```
 
@@ -181,7 +181,7 @@ BLiPChat
 Text: Obligatory  
 \#Min Buttons: 1  
 \#Max Buttons: 11  
-PS: On BLiPChat, if you add a LocationButton on QuickReply, it will ignore the others text buttons and will show only the LocationButton.  
+PS: On BLiPChat Channel, if you add a Location Button Type on QuickReply, it will ignore the others text buttons and will show only the Location Button.  
 
 ### Example:
 
@@ -366,6 +366,7 @@ Code:
 
 	//FACEBOOK
     var document = _facebookDocumentService.CreateListDocument(list);
+	
     await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
 
@@ -411,10 +412,10 @@ Code:
     receipt.AddAdditionalNotes("Discount3", -3, true); //Optional
     receipt.AddAdditionalNotes("Some other stuff", 180); //Optional
 
-	//FACEBOOK
+    //FACEBOOK
     var document = _facebookDocumentService.CreateReceiptDocument(receipt);
-	
-	await _sender.SendMessageAsync(document, message.From, cancellationToken);
+
+    await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
 
 Result:   
@@ -433,7 +434,7 @@ It is not working properly yet. Needs to investigate.
 
 Code:
 ```C#
-	//FACEBOOK
+    //FACEBOOK
     var document = _facebookDocumentService.CreateCallButtonDocument("Initial Text", "Call", "+5531999999999");
 
     await _sender.SendMessageAsync(document, message.From, cancellationToken);
