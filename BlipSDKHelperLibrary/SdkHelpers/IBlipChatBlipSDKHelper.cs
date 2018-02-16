@@ -9,7 +9,6 @@ namespace BlipSDKHelperLibrary.SdkHelpers
     IMenuCreation,
     IPlainTextCreation,
     IQuickreplyCreation,
-    IQuickreplySendLocationCreation,
     IWebLinkCreation
     {
     }

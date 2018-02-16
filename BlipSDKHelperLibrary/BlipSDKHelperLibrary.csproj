@@ -97,7 +97,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interfaces\IQuickreplySendLocationCreation.cs" />
     <Compile Include="SdkHelpers\BlipChatBlipSDKHelper.cs" />
     <Compile Include="SdkHelpers\BlipSDKHelperCore.cs" />
     <Compile Include="FacebookNativeModel\FacebookNativeButtonType.cs" />

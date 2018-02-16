@@ -221,21 +221,6 @@ namespace BlipSDKHelperLibrary
         }
 
 
-        public static DocumentCollection GENERIC_CreateQuickReplySendLocationDocument(QuickReplyModel quickReplyModel)
-        {
-            var options = new List<SelectOption>();
-            var buttons = quickReplyModel.Options.OrderBy(c => c.Order).ToList();
-
-
-            var documentList = new GroupDocumentsModel();
-
-            var sendLocationButton = buttons.Select(c => c.Type.Equals(ButtonType.Location)).FirstOrDefault();
-
-            documentList.Add(CreateSendLocationDocument(quickReplyModel.Text));
-
-            return GENERIC_CreateCollectionOfDocuments(documentList);
-        }
-
         public static DocumentCollection GENERIC_CreateQuickReplyDocument(QuickReplyModel quickReplyModel)
         {
 
@@ -244,16 +229,19 @@ namespace BlipSDKHelperLibrary
 
             var documentList = new GroupDocumentsModel();
 
-            for (int i = 0; i < buttons.Count(); i++)
+            if (buttons.Exists(c => ButtonType.Location.Equals(c.Type)))
             {
-                if (ButtonType.Text.Equals(buttons[i].Type))
+                documentList.Add(CreateSendLocationDocument(quickReplyModel.Text));
+            }
+            else
+            {
+                for (int i = 0; i < buttons.Count(); i++)
                 {
-                    options.Add(CreateQuickReplyTextButton(buttons[i].Text, buttons[i].Value, i));
+                    if (ButtonType.Text.Equals(buttons[i].Type))
+                    {
+                        options.Add(CreateQuickReplyTextButton(buttons[i].Text, buttons[i].Value, i));
+                    }
                 }
-                //else if (ButtonType.Location.Equals(buttons[i].Type))
-                //{
-                //    documentList.Add(CreateSendLocationDocument(quickReplyModel.Text));
-                //}
             }
 
             if (options.Any())

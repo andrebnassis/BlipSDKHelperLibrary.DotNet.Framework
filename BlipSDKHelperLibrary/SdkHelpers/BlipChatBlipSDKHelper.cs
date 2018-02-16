@@ -45,11 +45,6 @@ namespace BlipSDKHelperLibrary.SdkHelpers
             return BlipSDKHelperCore.GENERIC_CreateQuickReplyDocument(quickReplyModel);
         }
 
-        public Document CreateQuickReplySendLocationDocument(QuickReplyModel quickReplyModel)
-        {
-            return BlipSDKHelperCore.GENERIC_CreateQuickReplySendLocationDocument(quickReplyModel);
-        }
-
         public PlainText CreateTextDocument(string text)
         {
             return BlipSDKHelperCore.GENERIC_CreateTextDocument(text);
