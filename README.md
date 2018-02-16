@@ -13,7 +13,8 @@ PM> Install-Package BlipSDKHelperLibrary
 
 This library is implemented for the following Messaging Channels:
 
- - Facebook Messenger
+ - Facebook Messenger  
+ - BLiPChat  
 
 # Using Examples:
 
@@ -22,17 +23,23 @@ First of all, you need to instantiate the service.
 Code:  
 ```C#
         private readonly IMessagingHubSender _sender;
-        private readonly IFacebookBlipSDKHelper _documentService;
+        private readonly IFacebookBlipSDKHelper _facebookDocumentService;
+		private readonly IBlipChatBlipSDKHelper _blipchatDocumentService;
         public PlainTextMessageReceiver(IMessagingHubSender sender)
         {
             _sender = sender;
-            _documentService = new FacebookBlipSDKHelper();
+            _facebookDocumentService = new FacebookBlipSDKHelper();
+			_blipchatDocumentService = new BlipChatBlipSDKHelper();
         }
 ```
 
-PS: All these examples accepts an extra/optional argument that sets the Order of the element. But if you want to use, you have to set for all the elements of the specific object.
+PS: Almost all these examples accepts an extra/optional argument that sets the Order of the element (it does not work for ListModel). But if you want to use, you have to set for all the elements of the specific object.
 
 ## 1. Sending Text
+
+### Channels:  
+Facebook Messenger  
+BLiPChat  
 
 ### Requirements:  
 Text: Obligatory
@@ -41,7 +48,10 @@ Text: Obligatory
 
 Code:  
  ```C#
-	var document = _documentService.CreateTextDocument("Sending a simple text");
+	//FACEBOOK
+	var document = _facebookDocumentService.CreateTextDocument("Sending a simple text");
+	//BLIPCHAT
+    var document = _blipchatDocumentService.CreateTextDocument("Sending a simple text");
 	
 	await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
@@ -51,6 +61,10 @@ Result:
 ![alt text](https://image.ibb.co/hjUJzR/01_Plain_Text.png)
 
 ## 2. Sending Image
+
+### Channels:  
+Facebook Messenger  
+BLiPChat  
 
 ### Requirements:  
 UrlImage: Obligatory  
@@ -62,7 +76,10 @@ Subtitle: Optional
 
 Code:  
  ```C#
-	var document = _documentService.CreateImageDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalSubtitle");
+	//FACEBOOK
+    var document = _facebookDocumentService.CreateImageDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalSubtitle");
+	//BLIPCHAT
+    var document = _blipchatDocumentService.CreateImageDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalSubtitle");
 	
 	await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
@@ -71,6 +88,9 @@ Result:
 ![alt text](https://image.ibb.co/hRUXWR/Image.png)
 
 ## 3. Sending Video
+
+### Channels:  
+Facebook Messenger  
 
 ### Requirements:  
 UrlVideo: Obligatory  
@@ -81,7 +101,8 @@ Subtitle: Optional
 
 Code:  
  ```C#
-	var document = _documentService.CreateVideoDocument("https://dl.dropboxusercontent.com/s/jxy3sspxbl6ilan/John%20Lennon%20-%20Imagine.mp4", "OptionalTitle", "OptionalSubtitle");
+	//FACEBOOK
+	var document = _facebookDocumentService.CreateVideoDocument("https://dl.dropboxusercontent.com/s/jxy3sspxbl6ilan/John%20Lennon%20-%20Imagine.mp4", "OptionalTitle", "OptionalSubtitle");
 	
 	await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
@@ -91,6 +112,10 @@ Result:
 
 
 ## 4. Sending Web Link
+
+### Channels:  
+Facebook Messenger  
+BLiPChat  
 
 ### Requirements:  
 Url: Obligatory  
@@ -102,7 +127,10 @@ Subtitle: Optional
 
 Code:  
  ```C#
-	var document = _documentService.CreateWebLinkDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalSubtitle");
+	//FACEBOOK
+    var document = _facebookDocumentService.CreateWebLinkDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalSubtitle");
+    //BLIPCHAT
+    var document = _blipchatDocumentService.CreateWebLinkDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalSubtitle");
 	
 	await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
@@ -112,11 +140,15 @@ Result:
 
 ## 5. Sending Menu
 
+### Channels:  
+Facebook Messenger  
+BLiPChat  
+
 ### Requirements:  
 Text: Obligatory  
 \#Min Buttons: 1  
 \#Max Buttons: unlimited  
-PS: Buttons are grouped by 3 when sent.
+PS: On Facebook Messenger Channel, buttons are grouped by 3 when sent.
 
 ### Example:
 
@@ -127,7 +159,10 @@ Code:
     menu.AddTextButton("Button1", "Value1", 1);
     menu.AddTextButton("Button0", "Value0");
     
-    var document = _documentService.CreateMenuDocument(menu);
+    //FACEBOOK
+    var document = _facebookDocumentService.CreateMenuDocument(menu);
+    //BLIPCHAT
+    var document = _blipchatDocumentService.CreateMenuDocument(menu);
 	
 	await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
@@ -138,10 +173,15 @@ Result:
 
 ## 6. Sending QuickReply
 
+### Channels:  
+Facebook Messenger  
+BLiPChat  
+
 ### Requirements:  
 Text: Obligatory  
 \#Min Buttons: 1  
-\#Max Buttons: 11
+\#Max Buttons: 11  
+PS: On BLiPChat, if you add a LocationButton on QuickReply, it will ignore the others text buttons and will show only the LocationButton.  
 
 ### Example:
 
@@ -160,7 +200,10 @@ Code:
 	quickreply.AddTextButton("Button8", "Value8", null, 8);
 	quickreply.AddTextButton("Button9", "Value9", null, 9);
 
-    var document = _documentService.CreateQuickReplyDocument(quickreply);
+    //FACEBOOK
+    var document = _facebookDocumentService.CreateQuickReplyDocument(quickreply);
+    //BLIPCHAT
+    var document = _blipchatDocumentService.CreateQuickReplyDocument(quickreply);
 	
 	await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
@@ -171,31 +214,54 @@ Result:
 
 ## 7. Sending Multiple Documents at the same time
 
-### Requirements:  
+### Channels:  
+Facebook Messenger  
+BLiPChat  
 
+### Requirements:  
 It follows the dependency of each document that will be sent.
 
 ### Example:
 
 Code:  
  ```C#
-	var document0 = _documentService.CreateTextDocument("Sending a simple text");
-    var document1 = _documentService.CreateImageDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalSubtitle");
-    var document2 = _documentService.CreateVideoDocument("https://dl.dropboxusercontent.com/s/jxy3sspxbl6ilan/John%20Lennon%20-%20Imagine.mp4", "OptionalTitle", "OptionalSubtitle");
+	//FACEBOOK
+    var document0 = _facebookDocumentService.CreateTextDocument("Sending a simple text");
+    var document1 = _facebookDocumentService.CreateImageDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalSubtitle");
+    var document2 = _facebookDocumentService.CreateVideoDocument("https://dl.dropboxusercontent.com/s/jxy3sspxbl6ilan/John%20Lennon%20-%20Imagine.mp4", "OptionalTitle", "OptionalSubtitle");
+    
+	var document = _facebookDocumentService.CreateCollectionOfDocuments(document1, document2, document0);
 
-    var document = _documentService.CreateCollectionOfDocuments(document1, document2, document0);
+    //BLIPCHAT
+    var document0 = _blipchatDocumentService.CreateTextDocument("Sending a simple text");
+    var document1 = _blipchatDocumentService.CreateImageDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalSubtitle");
+    
+	var document = _blipchatDocumentService.CreateCollectionOfDocuments(document1, document0);
+
     await _sender.SendMessageAsync(document, message.From, cancellationToken);
+	
 
     ////OR if you want to order the values explicity.
-    var document0 = _documentService.CreateTextDocument("Sending a simple text");
-    var document1 = _documentService.CreateImageDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalSubtitle");
-    var document2 = _documentService.CreateVideoDocument("https://dl.dropboxusercontent.com/s/jxy3sspxbl6ilan/John%20Lennon%20-%20Imagine.mp4", "OptionalTitle", "OptionalSubtitle");
-
+    //FACEBOOK
+    var document0 = _facebookDocumentService.CreateTextDocument("Sending a simple text");
+    var document1 = _facebookDocumentService.CreateImageDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalSubtitle");
+    var document2 = _facebookDocumentService.CreateVideoDocument("https://dl.dropboxusercontent.com/s/jxy3sspxbl6ilan/John%20Lennon%20-%20Imagine.mp4", "OptionalTitle", "OptionalSubtitle");
     var collection = new GroupDocumentsModel();
     collection.Add(document0, 2);
     collection.Add(document1);
     collection.Add(document2, 1);
-    var document = _documentService.CreateCollectionOfDocuments(collection);
+	
+	var document = _facebookDocumentService.CreateCollectionOfDocuments(collection);
+
+    //BLIPCHAT
+    var document0 = _blipchatDocumentService.CreateTextDocument("Sending a simple text");
+    var document1 = _blipchatDocumentService.CreateImageDocument("https://dl.dropboxusercontent.com/s/99sw7vu788suww1/imagineFloor.jpg", "https://dl.dropboxusercontent.com/s/0u34yn7pj29ak1v/imagineFloorPreview.jpg", "OptionalTitle", "OptionalSubtitle");
+    var collection = new GroupDocumentsModel();
+    collection.Add(document0, 2);
+    collection.Add(document1);
+	
+	var document = _blipchatDocumentService.CreateCollectionOfDocuments(collection);
+	
     await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
 
@@ -205,8 +271,11 @@ Result:
 
 ## 8. Sending Carousel
 
-### Requirements:  
+### Channels:  
+Facebook Messenger  
+BLiPChat  
 
+### Requirements:  
 \#Min Buttons per Card: 0  
 \#Max Buttons per Card: 3  
 \#Min Cards: 1  
@@ -233,7 +302,11 @@ Code:
     carousel.AddCard("Title and Button: Title goes here, button goes below",null);
     carousel.GetCard(6).AddLinkButton("Button0: Link", "http://www.facebook.com");
 
-    var document = _documentService.CreateCarouselDocument(carousel);
+    //FACEBOOK
+    var document = _facebookDocumentService.CreateCarouselDocument(carousel);
+    //BLIPCHAT
+    var document = _blipchatDocumentService.CreateCarouselDocument(carousel);
+	
     await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
 
@@ -243,24 +316,29 @@ Result:
 
 ## 9.0 Prepare to Send List With WebUrl on Item
 
-### Requirements:
+### Channels:  
+Facebook Messenger  
 
+### Requirements:  
 Useful if it is first time that you sets an URL when you use GetItem.AddWebUrl CreateListDocument's function (item 9.1).
 
 ### Example:
 
 Code:  
  ```C#
-    var result = await _documentService.RegisterDomainToWhitelist(_sender, "https://url1.com","https://url2.com");
+	//FACEBOOK
+    var result = await _facebookDocumentService.RegisterDomainToWhitelist(_sender, "https://url1.com","https://url2.com");
     //OR
     var urlList = new List<string>() { "https://url1.com", "https://url2.com" };
-    var result = await _documentService.RegisterDomainToWhitelist(_sender, urlList)
+    var result = await _facebookDocumentService.RegisterDomainToWhitelist(_sender, urlList)
 ```
 
 ## 9.1 Sending List
 
-### Requirements:  
+### Channels:  
+Facebook Messenger  
 
+### Requirements:  
 \#Min Items: 2  
 \#Max Items: 4  
 Title of each Item: Optional  
@@ -286,7 +364,8 @@ Code:
     //IMPORTANT(only for List Creation case): 
     //If it is first time that you are using GetItem.AddWebUrl method, dont forget to call RegisterDomainToWhitelist function, passing the Urls as parameters.
 
-    var document = _documentService.CreateListDocument(list);
+	//FACEBOOK
+    var document = _facebookDocumentService.CreateListDocument(list);
     await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
 
@@ -296,8 +375,10 @@ Result:
 
 ## 10. Sending Receipt
 
-### Requirements: 
+### Channels:  
+Facebook Messenger  
 
+### Requirements:  
 Currency: Obligatory  
 Payment Method: Obligatory  
 Ship Info: Obligatory
@@ -330,7 +411,8 @@ Code:
     receipt.AddAdditionalNotes("Discount3", -3, true); //Optional
     receipt.AddAdditionalNotes("Some other stuff", 180); //Optional
 
-    var document = _documentService.CreateReceiptDocument(receipt);
+	//FACEBOOK
+    var document = _facebookDocumentService.CreateReceiptDocument(receipt);
 	
 	await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
@@ -341,15 +423,18 @@ Result:
 
 ## 11. Sending CallButton
 
-### Requirements: 
+### Channels:  
+Facebook Messenger  
 
+### Requirements:  
 It is not working properly yet. Needs to investigate.
 
 ### Example:
 
 Code:
 ```C#
-    var document = _documentService.CreateCallButtonDocument("Initial Text", "Call", "+5531999999999");
+	//FACEBOOK
+    var document = _facebookDocumentService.CreateCallButtonDocument("Initial Text", "Call", "+5531999999999");
 
     await _sender.SendMessageAsync(document, message.From, cancellationToken);
 ```
