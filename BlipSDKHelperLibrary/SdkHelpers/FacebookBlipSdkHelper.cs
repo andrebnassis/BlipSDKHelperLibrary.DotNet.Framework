@@ -11,6 +11,7 @@ using BlipSDKHelperLibrary.FacebookNativeModel;
 using RestSharp;
 using Newtonsoft.Json;
 using Takenet.MessagingHub.Client.Sender;
+using Newtonsoft.Json.Linq;
 
 namespace BlipSDKHelperLibrary
 {
@@ -84,18 +85,19 @@ namespace BlipSDKHelperLibrary
 
         private async Task<string> GetPageAccessToken(IMessagingHubSender sender)
         {
-            object pageAccessToken = "";
+            JToken JValuePageAccessToken = "";
 
             try
             {
                 var commandResponse = await sender.SendCommandAsync(new Command() { Id = EnvelopeId.NewId(), Method = CommandMethod.Get, Uri = new LimeUri("/configuration/caller") });
                 foreach (var item in (commandResponse.Resource as DocumentCollection).Items)
                 {
-                    object key = "";
-                    var foundKey = (item as JsonDocument).TryGetValue("name", out key);
-                    if (key.ToString().Equals("PageAccessToken"))
+                    JToken JValueKey = "";
+                    var JObjectItem = JObject.FromObject(item);
+                    var foundKey = JObjectItem.TryGetValue("name", out JValueKey);
+                    if ((JValueKey as JValue).Value.ToString().Equals("PageAccessToken"))
                     {
-                        var foundValue = (item as JsonDocument).TryGetValue("value", out pageAccessToken);
+                        var foundValue = JObjectItem.TryGetValue("value", out JValuePageAccessToken);
                         break;
                     }
                 }
@@ -106,7 +108,7 @@ namespace BlipSDKHelperLibrary
                 throw new Exception("Error trying to get PageAccessToken", e);
             }
 
-            return pageAccessToken.ToString();
+            return (JValuePageAccessToken as JValue).Value.ToString();
         }
 
         public async Task<IRestResponse> RegisterDomainToWhitelist(IMessagingHubSender sender, params string[] urls)
